@@ -1,0 +1,22 @@
+{
+  "name": "wordcloudbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx nodemon src/main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  },
+  "dependencies": {
+    "canvas": "^2.11.2",
+    "chalk": "^4.1.2",
+    "discord.js": "^14.15.2",
+    "dotenv": "^16.4.5",
+    "node-wordcloud": "^0.0.2"
+  }
+}
