@@ -1,4 +1,6 @@
-const { Message } = require("discord.js");
+const { createCanvas } = require("canvas");
+const { Message, AttachmentBuilder } = require("discord.js");
+const WordCloud = require("node-wordcloud")();
 
 const ignoredWords = ["a", "the", "an"];
 
@@ -33,6 +35,21 @@ function getListFromMessageArray(msgArray) {
     return frequencyList;
 }
 
+/**
+ * @param {[string, number][]} wordFreqList 
+ */
+function createWordCloudFromList(wordFreqList) {
+    const canvas = createCanvas(500, 500);
+    const wordcloud = WordCloud(canvas, {
+        list: wordFreqList,
+    })
+
+    wordcloud.draw();
+
+    return new AttachmentBuilder(canvas.toBuffer(), {name: "wordcloud.png" });
+}
+
 module.exports = {
     getListFromMessageArray,
+    createWordCloudFromList,
 }

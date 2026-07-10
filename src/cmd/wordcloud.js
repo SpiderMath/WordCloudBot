@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, CommandInteraction, EmbedBuilder, AttachmentBuilder, GuildMessageManager } = require("discord.js");
 const Wordcloud = require("node-wordcloud")();
 const { createCanvas } = require("canvas");
-const { getListFromMessageArray } = require("../util/wordcloud");
+const { getListFromMessageArray, createWordCloudFromList } = require("../util/wordcloud");
 
 module.exports = {
 	info: new SlashCommandBuilder()
@@ -30,10 +30,12 @@ module.exports = {
 		
 		// checking if the input is proper.
 		const channel = await interaction.client.channels.fetch(channelID);
+
 		if(!channel.isTextBased)
 			return interaction.reply("The channel **needs** to be a text channel!");
 		if(!Number.isInteger(msgCount) || msgCount < 1 || msgCount > 100)
 			return interaction.reply("The number of messages to fetch **needs** to be an positive integer in the range 1 to 100 (both inclusive)");
+
 		// preventing NSFW content in SFW channels
 		if(channel.nsfw && !interaction.channel.nsfw)
 			return interaction.reply("Since this is a SFW channel, I cannot display the wordcloud for an NSFW channel in the server. Please try this command in an NSFW channel, or try to view the cloud for an SFW channel!");
@@ -54,11 +56,9 @@ module.exports = {
 		});
 
 		const list = getListFromMessageArray(messages.toJSON());
-		const wordcloud = Wordcloud(canvas, { list });
-		wordcloud.draw();
 
 		// packaging the data off
-		const attachmentFile = new AttachmentBuilder(canvas.toBuffer(), { name: "wordcloud.png" });
+		const attachmentFile = createWordCloudFromList(list);
 		const attachmentEmbed = new EmbedBuilder()
 			.setImage("attachment://wordcloud.png");
 
